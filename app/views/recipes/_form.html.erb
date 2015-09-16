@@ -1,0 +1,45 @@
+<div class="form-horizontal">
+  <%= form_for(@recipe) do |f| %>
+    <% if @recipe.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(@recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
+
+        <ul>
+        <% @recipe.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <fieldset id="recipe-meta">
+    <ol>
+      <li class="control-group">
+        <%= f.label :title, "Recipe Name", class: "control-label" %>
+        <div class="controls"><%= f.text_field :title %></div>
+      </li>
+      <li class="control-group">
+        <%= f.label :description, "A brief description of this recipe", class: "control-label" %>
+        <div class="controls"><%= f.text_area :description, rows: 5 %></div>
+      </li>
+      <li class="control-group">
+        <%= f.label :instructions, "Instructions for this recipe", class: "control-label" %>
+        <div class="controls"><%= f.text_area :instructions, rows: 10 %></div>
+      </li>
+    </ol>
+  </fieldset>
+
+  <fieldset id="recipe-ingredients">
+    <ol>
+      <%= f.fields_for :recipe_ingredient do |recipe_ingredient| %>
+        <%= render 'ingredient_fields', f: recipe_ingredient %>
+      <% end %>
+    </ol>
+    <%= link_to_add_association 'add ingredient', f, :recipe_ingredients, 'data-association-insertion-node' => "#recipe-ingredients ol", 'data-association-insertion-method' => "append", :wrap_object => Proc.new {|recipe_ingredient| recipe_ingredient.build_ingredient; recipe_ingredient } %>
+  </fieldset>
+
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+</div>
